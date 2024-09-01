@@ -11,6 +11,7 @@ import {
 	getCurrentUserProfile,
 	updateCurrentUserProfile,
 	deleteUser,
+	searchUsers,
 } from '../controllers/userController.js';
 import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
@@ -20,6 +21,9 @@ userRouter.post('/signup', createUser);
 userRouter.post('/login', passport.authenticate('local'), loginUser);
 userRouter.get('/auth/status', checkAuthStatus);
 userRouter.post('/logout', logout);
+
+//***USER SEARCH ROUTES***
+userRouter.get('/users/search', isAuthenticated, searchUsers);
 
 //user routes
 userRouter.get('/users', isAuthenticated, isAdmin, getUsers);
