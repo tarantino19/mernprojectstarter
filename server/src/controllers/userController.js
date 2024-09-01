@@ -148,9 +148,14 @@ const updateCurrentUserProfile = async (req, res) => {
 	try {
 		const user = await User.findById(req.user._id);
 
+		//check if username exist in the db
+		const usernameExists = await User.findOne({ username: req.body.username });
+		if (usernameExists && usernameExists._id.toString() !== user._id.toString()) {
+			return res.status(400).json({ error: 'Username already exists' });
+		}
+
 		if (user) {
 			user.username = req.body.username || user.username;
-			user.email = req.body.email || user.email;
 
 			if (req.body.password) {
 				const salt = await bcrypt.genSalt(11);
