@@ -40,6 +40,7 @@ app.use(passport.session());
 //routes
 app.use('/userApi', userRouter);
 
+//start server
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {

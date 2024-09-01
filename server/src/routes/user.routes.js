@@ -12,9 +12,13 @@ import {
 	updateCurrentUserProfile,
 	deleteUser,
 	searchUsers,
+	generateReport,
 } from '../controllers/userController.js';
 import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
+
+//***GENERATE REPORT***
+userRouter.get('/users/generate-report', isAuthenticated, generateReport);
 
 //auth routes
 userRouter.post('/signup', createUser);
@@ -25,7 +29,7 @@ userRouter.post('/logout', logout);
 //***USER SEARCH ROUTES***
 userRouter.get('/users/search', isAuthenticated, searchUsers);
 
-//user routes
+//user REST API routes
 userRouter.get('/users', isAuthenticated, isAdmin, getUsers);
 userRouter.get('/users/:id', isAuthenticated, getSingleUser);
 userRouter.delete('/users/:id', isAuthenticated, isAdmin, deleteUser);

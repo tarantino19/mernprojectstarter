@@ -1,6 +1,8 @@
 import User from '../models/userSchema.js';
 import { hashPassword, comparePassword } from '../utils/helpers.js';
 import bcrypt from 'bcrypt';
+import PDFDocument from 'pdfkit';
+import axios from 'axios';
 
 //***AUTH***
 const createUser = async (req, res) => {
@@ -216,6 +218,52 @@ const searchUsers = async (req, res) => {
 	});
 };
 
+//***GENERATE REPORT***
+
+const generateReport = async (req, res) => {
+	try {
+		// Prepare query parameters
+		const queryParams = Object.keys(req.query).length ? req.query : {};
+
+		// Fetch data from the searchUsers endpoint
+		const { data } = await axios.get('http://localhost:4000/userApi/users/search', {
+			params: queryParams,
+			headers: {
+				Cookie: req.headers.cookie,
+				Authorization: req.headers.authorization,
+			},
+		});
+
+		const doc = new PDFDocument();
+
+		// Set headers to send PDF as an attachment
+		res.setHeader('Content-disposition', 'attachment; filename=report.pdf');
+		res.setHeader('Content-type', 'application/pdf');
+		doc.pipe(res);
+
+		// Add title
+		doc.fontSize(18).text(`User Report ${new Date()}`, { align: 'center' });
+		doc.moveDown();
+
+		// Add data to PDF
+		if (data.users && data.users.length > 0) {
+			data.users.forEach((user) => {
+				doc.fontSize(12).text(`Username: ${user.username}`, { align: 'left' });
+				doc.text(`Email: ${user.email}`);
+				doc.text(`Admin: ${user.isAdmin ? 'Yes' : 'No'}`);
+				doc.moveDown();
+			});
+		} else {
+			doc.fontSize(12).text('No users found', { align: 'center' });
+		}
+
+		doc.end();
+	} catch (error) {
+		// Handle errors
+		res.status(500).json({ error: error.message });
+	}
+};
+
 export {
 	createUser,
 	loginUser,
@@ -227,4 +275,5 @@ export {
 	updateCurrentUserProfile,
 	deleteUser,
 	searchUsers,
+	generateReport,
 };
