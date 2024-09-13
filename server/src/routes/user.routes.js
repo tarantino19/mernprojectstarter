@@ -17,6 +17,8 @@ import {
 import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
 
+//check index.js - userRouter for initial route - all routes starts with /userApi in this case
+
 //***GENERATE REPORT***
 userRouter.get('/users/generate-report', isAuthenticated, generateReport);
 

@@ -41,6 +41,7 @@ app.use(passport.session());
 
 //routes
 app.use('/userApi', userRouter);
+//app.use('/productApi', productRouter);
 
 //start server
 const PORT = process.env.PORT || 8000;
