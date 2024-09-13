@@ -41,11 +41,10 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-	const { username, password } = req.body;
+	//this controller isn't necessary to log in user but it is used for double checking and logging
+	//passport-local already authenticated ths user even before this controller runs
 
-	if (!username || !password) {
-		return res.status(400).json({ error: 'Username and password are required' });
-	}
+	const { username, password } = req.body;
 
 	const user = await User.findOne({ username });
 	if (!user) {

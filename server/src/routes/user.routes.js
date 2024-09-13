@@ -18,6 +18,7 @@ import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
 
 //check index.js - userRouter for initial route - all routes starts with /userApi in this case
+//note: the order of routes also affects how and if it will work - dynamic :routes should be at the bottom to avoid conflict
 
 //***GENERATE REPORT***
 userRouter.get('/users/generate-report', isAuthenticated, generateReport);
