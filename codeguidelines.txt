@@ -1,4 +1,3 @@
 1 - Use axios for fetching for both frontend and backend.
-2 - Use react query for frontend fetching
-3 - Use redux for state management, or useState for simpler state management - useReducer for complex state management, useContext for global state management
-4 - Use react-hook-form for creating forms and for validation, zod for validation is also an option for cleaner code
+2 - Use react query for frontend fetching + maybe state management (Personal note: I'm dreading using Redux/RTK until I actually need it, will that ever happen? I have no idea but when it's necessary, i'll start using it)
+3 - Use react-hook-form for creating forms and for validation, zod for validation is also an option for cleaner code
