@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 
 const fetchAuthStatus = async (): Promise<boolean> => {
 	try {
@@ -35,7 +36,7 @@ const PrivateRoute: React.FC = () => {
 	}, []);
 
 	if (isAuthenticated === null) {
-		return <div>Loading...</div>; // Add a loading indicator or spinner here
+		return <Loader />;
 	}
 
 	return isAuthenticated ? <Outlet /> : <Navigate to='/login' replace />;
