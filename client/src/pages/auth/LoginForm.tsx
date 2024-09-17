@@ -1,9 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-// Define the type for the login form data
 interface LoginFormData {
 	username: string;
 	password: string;
@@ -14,32 +13,29 @@ const LoginForm: React.FC = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<LoginFormData>(); // Use the LoginFormData type
-	const navigate = useNavigate(); // React Router's useNavigate hook
+	} = useForm<LoginFormData>();
+	const navigate = useNavigate();
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
-			const response = await axios.post('http://localhost:4000/userApi/login', data);
-			console.log('Login response:', response.data);
+			console.log('Submitting login form with data:', data); // Debugging
 
-			// Save the token in localStorage
-			localStorage.setItem('authToken', response.data.token);
-			// Navigate to the profile page upon successful login
-			navigate(`/profiles/${data.username}`);
-		} catch (error) {
-			// Narrow down the type of error
-			if (axios.isAxiosError(error)) {
-				// Axios-specific error handling
-				if (error.response && error.response.data) {
-					alert(error.response.data.error || 'Invalid username or password');
-				} else {
-					alert('A network error occurred or the request was unsuccessful');
-				}
+			// Send login request
+			const response = await axios.post('http://localhost:4000/userApi/login', data, {
+				withCredentials: true, // Ensure cookies are sent with the request
+			});
+
+			console.log('Login response:', response.data); // Debugging
+
+			// Check for successful login
+			if (response.data.message === 'You are now logged in. User is now authenticated') {
+				// Redirect to homepage after successful login
+				navigate('/');
 			} else {
-				// Handle other unknown errors
-				console.error('Unexpected Error:', error);
-				alert('An unexpected error occurred');
+				alert('Unexpected response from server');
 			}
+		} catch (error) {
+			console.error('Login error:', error);
 		}
 	};
 
@@ -53,13 +49,8 @@ const LoginForm: React.FC = () => {
 				</div>
 
 				<div className='mb-4'>
-					<label className=' mr-5 bg-gray-100'>Password</label>
-					<input
-						type='password'
-						{...register('password', {
-							required: 'Password is required',
-						})}
-					/>
+					<label className='mr-5 bg-gray-100'>Password</label>
+					<input type='password' {...register('password', { required: 'Password is required' })} />
 					{errors.password && <p>{errors.password.message}</p>}
 				</div>
 

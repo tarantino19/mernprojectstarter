@@ -20,15 +20,33 @@ connectDB();
 
 //middlewares
 app.use(express.json());
-app.use(cors());
+// Determine the origin based on environment variables
+const allowedOrigins = [
+	'http://localhost:5173', // Development origin
+	'https://your-production-frontend-domain.com', // Production origin
+];
+
+// CORS configuration
+const corsOptions = {
+	origin: (origin, callback) => {
+		if (!origin || allowedOrigins.includes(origin)) {
+			callback(null, true);
+		} else {
+			callback(new Error('Not allowed by CORS'));
+		}
+	},
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	credentials: true, // Allow cookies to be sent with requests
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		httpOnly: true,
-		cookie: { maxAge: 1000 * 60 * 60 * 24 },
+		cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true },
 		store: MongoStore.create({
 			client: mongoose.connection.getClient(),
 			collectionName: 'sessions',
@@ -36,6 +54,7 @@ app.use(
 		}),
 	})
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 

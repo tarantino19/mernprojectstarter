@@ -65,17 +65,19 @@ const loginUser = async (req, res) => {
 	});
 
 	console.log('You are now logged in..');
-	res.status(200).json({ message: 'You are now logged in. User is now authenticated' });
+	res.status(200).json({ authenticated: true, message: 'You are now logged in. User is now authenticated' });
 };
 
 const checkAuthStatus = async (req, res) => {
 	console.log('Inside status');
-	console.log('statusAuth', req.user);
 	console.log('reqSession', req.session);
-	if (!req.user) {
-		return res.status(401).json({ error: 'Unauthorized' });
+	console.log('req.user', req.user.username);
+
+	if (req.isAuthenticated()) {
+		return res.status(200).json({ authenticated: true });
+	} else {
+		return res.status(401).json({ authenticated: false });
 	}
-	return res.status(200).json({ message: 'User is logged in and session is active' });
 };
 
 const logout = (req, res, next) => {
@@ -85,13 +87,21 @@ const logout = (req, res, next) => {
 
 	req.logout((error) => {
 		if (error) {
+			console.error('Logout error:', error);
 			return next(error);
 		}
+		res.clearCookie('connect.sid', { path: '/' });
 
-		console.log('clearing cookies...');
-		res.clearCookie('connect.sid');
-		console.log('You are now logged out..');
-		res.status(200).json({ message: 'Logout successful' });
+		// Optionally, destroy the session data
+		req.session.destroy((err) => {
+			if (err) {
+				console.error('Session destroy error:', err);
+				return next(err);
+			}
+
+			console.log('You are now logged out..');
+			res.status(200).json({ message: 'Logout successful' });
+		});
 	});
 };
 

@@ -1,7 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
-import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import ProfilesPage from './pages/ProfilesPage.tsx';
@@ -10,6 +8,7 @@ import NotFoundPage from './pages/NotFoundPage.tsx';
 import SignUpForm from './pages/auth/SignUpForm.tsx';
 import LoginForm from './pages/auth/LoginForm.tsx';
 import LogoutForm from './pages/auth/LogOutForm.tsx';
+import PrivateRoute from './pages/auth/PrivateRoute.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -22,27 +21,31 @@ const router = createBrowserRouter([
 		element: <SignUpForm />,
 	},
 	{
-		path: '/logout',
-		element: <LogoutForm />,
-	},
-	{
 		path: '/login',
 		element: <LoginForm />,
 	},
 	{
+		path: '/logout',
+		element: <LogoutForm />,
+	},
+	{
 		path: '/profiles',
-		element: <ProfilesPage />,
+		element: <PrivateRoute />, // Protect this route
 		children: [
+			{
+				path: '',
+				element: <ProfilesPage />,
+			},
 			{
 				path: ':profileId',
 				element: <ProfilePage />,
 			},
 		],
 	},
+	{
+		path: '*', // Fallback route
+		element: <NotFoundPage />,
+	},
 ]);
 
-createRoot(document.getElementById('root')!).render(
-	<StrictMode>
-		<RouterProvider router={router} />
-	</StrictMode>
-);
+createRoot(document.getElementById('root')!).render(<RouterProvider router={router} />);
