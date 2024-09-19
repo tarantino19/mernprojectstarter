@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Loader from '../components/Loader';
+import MainNav from './MainNav';
+import MainBody from './MainBody';
 
 type UserProfile = {
 	_id: string;
@@ -42,18 +44,26 @@ const ProfilePage = () => {
 	}
 
 	return (
-		<div>
-			<h1>Profile Page</h1>
-			{userProfile ? (
-				<div>
-					<h2>{userProfile.username}</h2>
-					<p>Profile ID: {userProfile._id}</p>
-					{/* Add more profile details here */}
+		<>
+			<MainNav />
+			<MainBody>
+				<h1 className='text-3xl font-bold text-gray-900 mb-4'>Hello, {userProfile?.username}</h1>
+				<div className='bg-white shadow rounded-lg p-6'>
+					<p className='text-gray-700'>
+						{' '}
+						{userProfile ? (
+							<div>
+								<h2>{userProfile.username}</h2>
+								<p>Profile ID: {userProfile._id}</p>
+								{/* Add more profile details here */}
+							</div>
+						) : (
+							<p>No user profile found.</p>
+						)}
+					</p>
 				</div>
-			) : (
-				<p>No user profile found.</p>
-			)}
-		</div>
+			</MainBody>
+		</>
 	);
 };
 

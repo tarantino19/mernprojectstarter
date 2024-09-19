@@ -16,51 +16,72 @@ const LoginForm: React.FC = () => {
 		formState: { errors },
 	} = useForm<LoginFormData>();
 	const navigate = useNavigate();
-
 	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
 			setLoading(true);
-			console.log('Submitting login form with data:', data);
-
+			setErrorMessage(null); // Reset any previous error message
 			const response = await axios.post('http://localhost:4000/userApi/login', data, {
 				withCredentials: true,
 			});
 
-			console.log('Login response:', response.data);
-
 			if (response.data.message === 'You are now logged in. User is now authenticated') {
 				navigate('/');
 			} else {
-				alert('Unexpected response from server');
+				setErrorMessage('Username or password does not match existing account');
 			}
 		} catch (error) {
 			console.error('Login error:', error);
+			setErrorMessage('Username or password does not match existing account');
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	return (
-		<div className='flex justify-center mt-5'>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className='mb-4'>
-					<label className='mr-5 bg-gray-100'>Username</label>
-					<input type='text' {...register('username', { required: 'Username is required' })} />
-					{errors.username && <p>{errors.username.message}</p>}
-				</div>
+		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
+			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
+				<h1 className='text-2xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500'>
+					Welcome Back!
+				</h1>
+				{errorMessage && <p className='text-red-500 text-center mb-4'>{errorMessage}</p>} {/* Display error message */}
+				<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+					<div className='mb-4'>
+						<label className='block text-gray-700 font-bold mb-2' htmlFor='username'>
+							Username
+						</label>
+						<input
+							id='username'
+							type='text'
+							{...register('username', { required: 'Username is required' })}
+							className='w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
+						/>
+						{errors.username && <p className='text-red-500 text-sm'>{errors.username.message}</p>}
+					</div>
 
-				<div className='mb-4'>
-					<label className='mr-5 bg-gray-100'>Password</label>
-					<input type='password' {...register('password', { required: 'Password is required' })} />
-					{errors.password && <p>{errors.password.message}</p>}
-				</div>
+					<div className='mb-4'>
+						<label className='block text-gray-700 font-bold mb-2' htmlFor='password'>
+							Password
+						</label>
+						<input
+							id='password'
+							type='password'
+							{...register('password', { required: 'Password is required' })}
+							className='w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
+						/>
+						{errors.password && <p className='text-red-500 text-sm'>{errors.password.message}</p>}
+					</div>
 
-				<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' type='submit'>
-					Log In
-				</button>
-			</form>
+					<button
+						type='submit'
+						className='w-full py-2 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all'
+					>
+						Log In
+					</button>
+				</form>
+			</div>
 		</div>
 	);
 };

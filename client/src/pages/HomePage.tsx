@@ -2,7 +2,7 @@ import Dashboard from './Dashboard';
 
 const HomePage = () => {
 	return (
-		<div className='p-4'>
+		<div>
 			<Dashboard />
 		</div>
 	);

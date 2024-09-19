@@ -42,7 +42,9 @@ const router = createBrowserRouter([
 
 const App: React.FC = () => (
 	<QueryClientProvider client={queryClient}>
-		<RouterProvider router={router} />
+		<div className='min-h-screen bg-gray-100'>
+			<RouterProvider router={router} />
+		</div>
 	</QueryClientProvider>
 );
 
