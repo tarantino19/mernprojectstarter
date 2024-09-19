@@ -69,10 +69,6 @@ const loginUser = async (req, res) => {
 };
 
 const checkAuthStatus = async (req, res) => {
-	console.log('Inside status');
-	console.log('reqSession', req.session);
-	console.log('req.user', req.user.username);
-
 	if (req.isAuthenticated()) {
 		return res.status(200).json({ authenticated: true });
 	} else {
