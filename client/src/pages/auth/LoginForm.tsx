@@ -27,7 +27,7 @@ const LoginForm: React.FC = () => {
 				withCredentials: true,
 			});
 
-			if (response.data.message === 'You are now logged in. User is now authenticated') {
+			if (response.data.status === 'success') {
 				navigate('/');
 			} else {
 				setErrorMessage('Username or password does not match existing account');
@@ -76,9 +76,14 @@ const LoginForm: React.FC = () => {
 
 					<button
 						type='submit'
-						className='w-full py-2 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all'
+						className={`w-full py-2 text-white font-bold rounded-lg transition-all ${
+							loading
+								? 'bg-gray-400 cursor-not-allowed'
+								: 'bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700'
+						}`}
+						disabled={loading}
 					>
-						Log In
+						{loading ? 'Submitting...' : 'Log In'}
 					</button>
 				</form>
 			</div>

@@ -3,10 +3,12 @@ import axios from 'axios';
 import Loader from '../components/Loader';
 import MainNav from './MainNav';
 import MainBody from './MainBody';
+import { Link } from 'react-router-dom';
 
 type UserProfile = {
 	_id: string;
 	username: string;
+	isAdmin: boolean;
 	// Add other fields as needed
 };
 
@@ -40,7 +42,7 @@ const ProfilePage = () => {
 	}
 
 	if (isError) {
-		return <p>Error fetching user profile: {error instanceof Error ? error.message : 'Unknown error'}</p>;
+		return <div>Error fetching user profile: {error instanceof Error ? error.message : 'Unknown error'}</div>;
 	}
 
 	return (
@@ -49,18 +51,43 @@ const ProfilePage = () => {
 			<MainBody>
 				<h1 className='text-3xl font-bold text-gray-900 mb-4'>Hello, {userProfile?.username}</h1>
 				<div className='bg-white shadow rounded-lg p-6'>
-					<p className='text-gray-700'>
+					<div className='text-gray-700'>
 						{' '}
 						{userProfile ? (
 							<div>
 								<h2>{userProfile.username}</h2>
-								<p>Profile ID: {userProfile._id}</p>
-								{/* Add more profile details here */}
+								<div>Profile ID: {userProfile._id}</div>
+								<div>is an Admin? {userProfile.isAdmin ? 'Yes' : 'No'}</div>
 							</div>
 						) : (
-							<p>No user profile found.</p>
+							<div>No user profile found.</div>
 						)}
-					</p>
+					</div>
+				</div>
+				<div className='p-4'>
+					{userProfile?.isAdmin ? (
+						<div className='bg-gray-100 p-4 rounded-lg shadow-md'>
+							<p className='font-bold mb-2 text-gray-800'>
+								You are an admin! That means you can see this thing I conditionally rendered here...
+							</p>
+							<a
+								href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+								className='inline-block px-6 py-2 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-bold rounded-lg shadow-lg hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all'
+							>
+								Get Your Admin Goodies Here...
+							</a>
+						</div>
+					) : (
+						<div className='bg-gray-100 p-4 rounded-lg shadow-md'>
+							<p className='font-bold mb-2 text-gray-800'>You are an not an admin but I still love you for being a member.</p>
+							<a
+								href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+								className='inline-block px-6 py-2 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-bold rounded-lg shadow-lg hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all'
+							>
+								Get Your Non-Admin Benefits Here...
+							</a>
+						</div>
+					)}
 				</div>
 			</MainBody>
 		</>

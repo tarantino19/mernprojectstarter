@@ -38,10 +38,10 @@ const Dashboard = () => {
 			<MainNav />
 			<MainBody>
 				<h1>This is your main dashboard!!</h1>
-				<p>
+				<div>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur quidem tempora molestias laudantium quod,
 					facere quam explicabo at, fugiat ipsum architecto! Eos vero commodi modi minima, libero soluta porro vel?
-				</p>
+				</div>
 			</MainBody>
 		</>
 	);

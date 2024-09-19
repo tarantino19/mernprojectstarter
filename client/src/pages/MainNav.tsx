@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ type User = {
 
 const MainNav = () => {
 	const navigate = useNavigate();
+	const [isLoading, setIsLoading] = useState(false); // State for loading status
 
 	const clearAuthToken = () => {
 		document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
@@ -17,6 +18,7 @@ const MainNav = () => {
 
 	const handleLogout = async () => {
 		try {
+			setIsLoading(true); // Set loading to true
 			await axios.post(
 				'http://localhost:4000/userApi/logout',
 				{},
@@ -29,6 +31,8 @@ const MainNav = () => {
 			navigate('/login');
 		} catch (error) {
 			console.error('Logout error:', error);
+		} finally {
+			setIsLoading(false); // Set loading back to false
 		}
 	};
 
@@ -62,8 +66,9 @@ const MainNav = () => {
 						<button
 							onClick={handleLogout}
 							className='text-white font-bold text-lg px-4 py-2 bg-red-500 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-lg hover:bg-red-400 cursor-pointer'
+							disabled={isLoading} // Disable button when loading
 						>
-							Logout
+							{isLoading ? 'Logging out...' : 'Logout'} {/* Conditional rendering */}
 						</button>
 					</div>
 				</div>

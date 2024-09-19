@@ -1,13 +1,13 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export interface SignUpFormData {
 	username: string;
 	email: string;
 	password: string;
 	confirmPassword?: string;
-	avatar?: string;
 	isAdmin?: boolean;
 }
 
@@ -16,26 +16,49 @@ const SignUpForm = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError,
 	} = useForm<SignUpFormData>();
-
-	const navigate = useNavigate(); // Initialize navigate
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onSubmit = async (data: SignUpFormData) => {
+		// Check if passwords match before proceeding with form submission
+		if (data.password !== data.confirmPassword) {
+			setError('confirmPassword', { type: 'manual', message: 'Passwords do not match' });
+			return;
+		}
+
 		try {
-			const response = await axios.post('http://localhost:4000/userApi/signup', data);
-			alert(response.data.message || 'Signup successful!');
-			navigate('/login'); // Redirect to login page on success
-		} catch (error) {
+			setLoading(true);
+			setErrorMessage(null); // Clear previous error message
+
+			// Post signup data to the server
+			const response = await axios.post(`http://localhost:4000/userApi/signup`, data);
+
+			// Redirect to login page on success
+			if (response.status === 200) {
+				navigate('/email-confirmation-message');
+			}
+		} catch (error: any) {
 			if (axios.isAxiosError(error)) {
 				if (error.response && error.response.data) {
-					alert(error.response.data.error || 'An error occurred during signup');
+					// Check if the error message from backend indicates username already exists
+					if (error.response.data.error === 'Username already exists') {
+						setError('username', { type: 'manual', message: 'Username already exists. Please choose another one.' });
+					} else {
+						// Display other API error messages
+						setErrorMessage(error.response.data.message || 'An error occurred during signup');
+					}
 				} else {
-					alert('A network error occurred or the request was unsuccessful');
+					// Fallback for unexpected errors
+					setErrorMessage('Unexpected Error occurred. Please try again.');
 				}
 			} else {
-				console.error('Unexpected Error:', error);
-				alert('An unexpected error occurred');
+				setErrorMessage('Unexpected Error occurred. Please try again.');
 			}
+		} finally {
+			setLoading(false); // Stop the loading state
 		}
 	};
 
@@ -45,6 +68,7 @@ const SignUpForm = () => {
 				<h1 className='text-3xl font-extrabold text-center mb-6 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-yellow-500 to-green-400'>
 					Create Your Account!
 				</h1>
+				{errorMessage && <p className='text-red-500 text-center mb-4'>{errorMessage}</p>}
 				<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 					<div className='mb-4'>
 						<label className='block text-gray-700 font-bold mb-2' htmlFor='username'>
@@ -106,30 +130,22 @@ const SignUpForm = () => {
 							type='password'
 							{...register('confirmPassword', {
 								required: 'Please confirm your password',
-								validate: (value, { password }) => value === password || 'Passwords do not match',
 							})}
 							className='w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
 						/>
 						{errors.confirmPassword && <p className='text-red-500 text-sm'>{errors.confirmPassword.message}</p>}
 					</div>
 
-					<div className='mb-4'>
-						<label className='block text-gray-700 font-bold mb-2' htmlFor='avatar'>
-							Avatar (Optional)
-						</label>
-						<input
-							id='avatar'
-							type='text'
-							{...register('avatar')}
-							className='w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
-						/>
-					</div>
-
 					<button
 						type='submit'
-						className='w-full py-3 bg-gradient-to-r from-red-400 via-yellow-500 to-green-400 text-white font-bold rounded-lg hover:from-red-500 hover:via-yellow-600 hover:to-green-500 transition-all'
+						disabled={loading} // Disable the button during submission
+						className={`w-full py-3 ${
+							loading
+								? 'bg-gray-400'
+								: 'bg-gradient-to-r from-red-400 via-yellow-500 to-green-400 hover:from-red-500 hover:via-yellow-600 hover:to-green-500'
+						} text-white font-bold rounded-lg transition-all`}
 					>
-						Sign Up
+						{loading ? 'Submitting...' : 'Sign Up'}
 					</button>
 				</form>
 			</div>

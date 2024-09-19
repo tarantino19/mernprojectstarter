@@ -12,7 +12,7 @@ const createUser = async (req, res) => {
 		const existingUser = await User.findOne({ username });
 
 		if (existingUser) {
-			return res.status(400).json({ error: 'Username already exists' });
+			return res.status(401).json({ error: 'Username already exists' });
 		}
 
 		if (!username || !password || !email) {
@@ -65,7 +65,9 @@ const loginUser = async (req, res) => {
 	});
 
 	console.log('You are now logged in..');
-	res.status(200).json({ authenticated: true, message: 'You are now logged in. User is now authenticated' });
+	res
+		.status(200)
+		.json({ status: 'success', authenticated: true, message: 'You are now logged in. User is now authenticated' });
 };
 
 const checkAuthStatus = async (req, res) => {
