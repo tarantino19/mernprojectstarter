@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 interface LoginFormData {
 	username: string;
@@ -16,26 +17,28 @@ const LoginForm: React.FC = () => {
 	} = useForm<LoginFormData>();
 	const navigate = useNavigate();
 
+	const [loading, setLoading] = useState(false);
+
 	const onSubmit = async (data: LoginFormData) => {
 		try {
-			console.log('Submitting login form with data:', data); // Debugging
+			setLoading(true);
+			console.log('Submitting login form with data:', data);
 
-			// Send login request
 			const response = await axios.post('http://localhost:4000/userApi/login', data, {
-				withCredentials: true, // Ensure cookies are sent with the request
+				withCredentials: true,
 			});
 
-			console.log('Login response:', response.data); // Debugging
+			console.log('Login response:', response.data);
 
-			// Check for successful login
 			if (response.data.message === 'You are now logged in. User is now authenticated') {
-				// Redirect to homepage after successful login
 				navigate('/');
 			} else {
 				alert('Unexpected response from server');
 			}
 		} catch (error) {
 			console.error('Login error:', error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
