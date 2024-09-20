@@ -7,7 +7,12 @@ import NotFoundPage from './pages/NotFoundPage.tsx';
 import SignUpForm from './pages/auth/SignUpForm.tsx';
 import LoginForm from './pages/auth/LoginForm.tsx';
 import PrivateRoute from './pages/auth/PrivateRoute.tsx';
+import EmailConfirm from './pages/EmailConfirm.tsx';
 import './index.css';
+import EmailConfirmFromEmail from './pages/EmailConfirmFromEmail.tsx';
+import ForgotPassword from './pages/auth/ForgotPassword.tsx';
+import ChangePassword from './pages/auth/ChangePassword.tsx';
+import ProtectedChangePassword from './pages/auth/ProtectedChangePassword.tsx';
 
 const queryClient = new QueryClient();
 
@@ -31,8 +36,24 @@ const router = createBrowserRouter([
 		element: <SignUpForm />, // Public route
 	},
 	{
+		path: '/email-confirmation-message',
+		element: <EmailConfirm />,
+	},
+	{
+		path: '/email-confirm-state',
+		element: <EmailConfirmFromEmail />,
+	},
+	{
+		path: '/change-password',
+		element: <ProtectedChangePassword />,
+	},
+	{
+		path: '/forgot-password',
+		element: <ForgotPassword />,
+	},
+	{
 		path: '/login',
-		element: <LoginForm />, // Public route
+		element: <LoginForm />,
 	},
 	{
 		path: '*', // Fallback route

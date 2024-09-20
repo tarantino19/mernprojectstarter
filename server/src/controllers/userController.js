@@ -3,6 +3,8 @@ import { hashPassword, comparePassword } from '../utils/helpers.js';
 import bcrypt from 'bcrypt';
 import PDFDocument from 'pdfkit';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import sgMail from '@sendgrid/mail';
 
 //***AUTH***
 const createUser = async (req, res) => {
@@ -30,15 +32,64 @@ const createUser = async (req, res) => {
 			email,
 			password: hashedPassword,
 			isAdmin: isAdmin || false, // Default to false if not provided
+			isEmailVerified: false,
 		});
 
+		// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+		// Function to generate email confirmation token
+		// const generateEmailConfirmationToken = (email) => {
+		// 	return jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '100y' });
+		// };
+
+		// const sendEmailConfirmation = async (email) => {
+		// 	try {
+		// 		const token = generateEmailConfirmationToken(email);
+		// 		const confirmationUrl = `http://localhost:5173//email-confirm-state/${token}`;
+
+		// 		const msg = {
+		// 			to: email,
+		// 			from: 'tolentinored19@gmail.com',
+		// 			subject: 'Email Confirmation',
+		// 			html: `
+		//             <h1>Email Confirmation</h1>
+		//             <p>Click the link below to confirm your email:</p>
+		//             <a href="${confirmationUrl}">Confirm Email</a>
+		//         `,
+		// 		};
+
+		// 		// Send the email
+		// 		await sgMail.send(msg);
+		// 		console.log('Confirmation email sent to:', email);
+		// 	} catch (error) {
+		// 		console.error('Error sending email:', error);
+		// 	}
+		// };
+
 		const user = await newUser.save();
-		res.status(200).json({ message: 'User created successfully', user: user });
+		res.status(201).json({ message: 'User created successfully, please verify your email to login', user: user });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: 'Internal server error' });
 	}
 };
+
+// const confirmEmail = async (req, res) => {
+// 	const { token } = req.query;
+
+// 	try {
+// 		// Verify the token
+// 		const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+// 		const email = decoded.email;
+
+// 		// You would typically update the user's status in the database to "confirmed"
+// 		// Example: await User.updateOne({ email }, { $set: { confirmed: true } });
+
+// 		res.status(200).json({ message: 'Email confirmed successfully. You can now log in.' });
+// 	} catch (error) {
+// 		res.status(400).json({ message: 'Invalid or expired token.' });
+// 	}
+// };
 
 const loginUser = async (req, res) => {
 	//this controller isn't necessary to log in user but it is used for double checking and logging

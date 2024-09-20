@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 export interface SignUpFormData {
@@ -37,7 +37,7 @@ const SignUpForm = () => {
 			const response = await axios.post(`http://localhost:4000/userApi/signup`, data);
 
 			// Redirect to login page on success
-			if (response.status === 200) {
+			if (response.status === 201) {
 				navigate('/email-confirmation-message');
 			}
 		} catch (error: any) {
@@ -148,6 +148,12 @@ const SignUpForm = () => {
 						{loading ? 'Submitting...' : 'Sign Up'}
 					</button>
 				</form>
+				<div className='pt-10 text-center'>
+					<div className='text-sm'>Already have an account? </div>
+					<Link to={'/login'} className='text-md font-semibold text-black'>
+						Log in here
+					</Link>
+				</div>
 			</div>
 		</div>
 	);

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface LoginFormData {
 	username: string;
@@ -20,6 +21,8 @@ const LoginForm: React.FC = () => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
 
 	const onSubmit = async (data: LoginFormData) => {
+		if (loading) return; // Prevent submission if already loading
+
 		try {
 			setLoading(true);
 			setErrorMessage(null); // Reset any previous error message
@@ -86,6 +89,19 @@ const LoginForm: React.FC = () => {
 						{loading ? 'Submitting...' : 'Log In'}
 					</button>
 				</form>
+				<div className='text-center mt-4'>
+					<Link
+						to={'/forgot-password'}
+						className='text-sm font-semibold text-purple-600 hover:text-purple-800 transition-colors duration-200'
+					>
+						Forgot Password?
+					</Link>
+				</div>
+				<div className='text-center mt-4'>
+					<Link to={'/signup'} className='text-sm font-semibold text-black'>
+						Sign Up for a New Account Here
+					</Link>
+				</div>
 			</div>
 		</div>
 	);

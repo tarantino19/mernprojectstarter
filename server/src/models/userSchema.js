@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
+	isEmailVerified: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const User = mongoose.model('User', userSchema);
