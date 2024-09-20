@@ -11,7 +11,7 @@ import passport from 'passport';
 import './src/strategies/local.strategy.js';
 //router imports
 import userRouter from './src/routes/user.routes.js';
-
+import { deleteUnverifiedUserCron } from './src/controllers/deleteUserCron.js';
 //define app
 const app = express();
 
@@ -61,6 +61,8 @@ app.use(passport.session());
 //routes
 app.use('/userApi', userRouter);
 //app.use('/productApi', productRouter);
+
+deleteUnverifiedUserCron.start();
 
 //start server
 const PORT = process.env.PORT || 8000;

@@ -72,7 +72,7 @@ const sendUserOTP = async (email) => {
 			html: `
 				<h1>Email Verification</h1>
 				<p style="font-size: 24px; font-weight: bold; color: red;">${generatedOTP}</p>
-				<p>This code will expire in 1 hour</p>
+				<p>This code will expire within 30 days, (if not verified) your account will then be deleted and you have to register again :)</p>
 			`,
 		};
 
@@ -84,7 +84,7 @@ const sendUserOTP = async (email) => {
 			email,
 			otp: hashedOTP,
 			createdAt: Date.now(),
-			expiresAt: Date.now() + 3600000, // 1 hour
+			expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
 		});
 
 		// Save the OTP
