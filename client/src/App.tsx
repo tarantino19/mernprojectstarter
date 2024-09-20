@@ -9,7 +9,6 @@ import LoginForm from './pages/auth/LoginForm.tsx';
 import PrivateRoute from './pages/auth/PrivateRoute.tsx';
 import EmailConfirm from './pages/EmailConfirm.tsx';
 import './index.css';
-import EmailConfirmFromEmail from './pages/EmailConfirmFromEmail.tsx';
 import ForgotPassword from './pages/auth/ForgotPassword.tsx';
 import ChangePassword from './pages/auth/ChangePassword.tsx';
 import ProtectedChangePassword from './pages/auth/ProtectedChangePassword.tsx';
@@ -36,12 +35,8 @@ const router = createBrowserRouter([
 		element: <SignUpForm />, // Public route
 	},
 	{
-		path: '/email-confirmation-message',
+		path: '/email-confirmation',
 		element: <EmailConfirm />,
-	},
-	{
-		path: '/email-confirm-state',
-		element: <EmailConfirmFromEmail />,
 	},
 	{
 		path: '/change-password',

@@ -10,4 +10,12 @@ const comparePassword = async (password, hashedPassword) => {
 	return await bcrypt.compare(password, hashedPassword);
 };
 
-export { hashPassword, comparePassword };
+const hashOTP = async (password) => {
+	if (typeof password !== 'string') {
+		throw new Error('Password must be a string');
+	}
+	const saltRounds = 10; // or any number of rounds you prefer
+	return await bcrypt.hash(password, saltRounds);
+};
+
+export { hashPassword, comparePassword, hashOTP };

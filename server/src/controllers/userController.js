@@ -3,8 +3,8 @@ import { hashPassword, comparePassword } from '../utils/helpers.js';
 import bcrypt from 'bcrypt';
 import PDFDocument from 'pdfkit';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import sgMail from '@sendgrid/mail';
+import Otp from '../models/otpSchema.js';
+import sendEmail from '../utils/emailSender.js';
 
 //***AUTH***
 const createUser = async (req, res) => {
@@ -35,61 +35,97 @@ const createUser = async (req, res) => {
 			isEmailVerified: false,
 		});
 
-		// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+		await newUser.save();
 
-		// Function to generate email confirmation token
-		// const generateEmailConfirmationToken = (email) => {
-		// 	return jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '100y' });
-		// };
-
-		// const sendEmailConfirmation = async (email) => {
-		// 	try {
-		// 		const token = generateEmailConfirmationToken(email);
-		// 		const confirmationUrl = `http://localhost:5173//email-confirm-state/${token}`;
-
-		// 		const msg = {
-		// 			to: email,
-		// 			from: 'tolentinored19@gmail.com',
-		// 			subject: 'Email Confirmation',
-		// 			html: `
-		//             <h1>Email Confirmation</h1>
-		//             <p>Click the link below to confirm your email:</p>
-		//             <a href="${confirmationUrl}">Confirm Email</a>
-		//         `,
-		// 		};
-
-		// 		// Send the email
-		// 		await sgMail.send(msg);
-		// 		console.log('Confirmation email sent to:', email);
-		// 	} catch (error) {
-		// 		console.error('Error sending email:', error);
-		// 	}
-		// };
-
-		const user = await newUser.save();
-		res.status(201).json({ message: 'User created successfully, please verify your email to login', user: user });
+		res.status(201).json({ message: 'User created successfully, please verify your email to login', user: newUser });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: 'Internal server error' });
 	}
 };
 
-// const confirmEmail = async (req, res) => {
-// 	const { token } = req.query;
+const sendOTP = async (req, res) => {
+	const { email, subject, message, duration = 1 } = req.body;
+	try {
+		if (!email && !subject && !message) {
+			throw new Error('Email, subject, and message are required');
+		}
 
-// 	try {
-// 		// Verify the token
-// 		const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-// 		const email = decoded.email;
+		await Otp.deleteOne({ email });
 
-// 		// You would typically update the user's status in the database to "confirmed"
-// 		// Example: await User.updateOne({ email }, { $set: { confirmed: true } });
+		const generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
 
-// 		res.status(200).json({ message: 'Email confirmed successfully. You can now log in.' });
-// 	} catch (error) {
-// 		res.status(400).json({ message: 'Invalid or expired token.' });
-// 	}
-// };
+		const mailOptions = {
+			from: process.env.AUTH_EMAIL,
+			to: email,
+			subject: subject,
+			html: `
+					<h1>${message}</h1>
+					<p style="font-size: 24px; font-weight: bold; color: red;">${generatedOTP}</p>
+					<p>This code will expire in ${duration} hour${duration > 1 ? 's' : ''}</p>
+			`,
+		};
+
+		await sendEmail(mailOptions);
+
+		const hashedOTP = await hashPassword(generatedOTP);
+		const newOTP = new Otp({
+			email,
+			otp: hashedOTP,
+			createdAt: Date.now(),
+			expiresAt: Date.now() + 3600000 * +duration,
+		});
+
+		const createdNewOTP = await newOTP.save();
+
+		res.status(200).json(createdNewOTP);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+};
+
+const verifyOTP = async (req, res) => {
+	const { email, otp } = req.body;
+
+	if (!email || !otp) {
+		return res.status(400).json({ error: 'Email and OTP are required' });
+	}
+
+	try {
+		const existingOTP = await Otp.findOne({ email });
+
+		if (!existingOTP) {
+			return res.status(404).json({ error: 'OTP not found for this email' });
+		}
+
+		const { expiresAt } = existingOTP;
+
+		// Check if OTP is expired
+		if (expiresAt < Date.now()) {
+			await Otp.deleteOne({ email });
+			return res.status(400).json({ error: 'OTP has expired. Please request a new one.' });
+		}
+
+		// Verify the OTP
+		const isValidOTP = await bcrypt.compare(otp, existingOTP.otp);
+
+		if (!isValidOTP) {
+			return res.status(400).json({ error: 'Invalid OTP. Please try again.' });
+		}
+
+		// Update user verification status
+		await User.updateOne({ email }, { isEmailVerified: true });
+
+		// Optionally, delete the OTP after successful verification
+		await Otp.deleteOne({ email });
+
+		res.status(200).json({ message: 'OTP verified successfully, email verified!', authenticated: true });
+	} catch (error) {
+		console.error('Error verifying OTP:', error);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+};
 
 const loginUser = async (req, res) => {
 	//this controller isn't necessary to log in user but it is used for double checking and logging
@@ -281,6 +317,32 @@ const searchUsers = async (req, res) => {
 	});
 };
 
+//FORGOT PASSWORD
+
+// const forgotPassword = async (req, res) => {
+// 	try {
+// 		const { email } = req.body;
+// 		const existingUser = await User.findOne({ email });
+// 		if (!existingUser) {
+// 			return res.status(404).json({ error: 'User not found' });
+// 		}
+
+// 		if (!existingUser.isEmailVerified) {
+// 			return res.status(400).json({ error: 'Please verify your email first' });
+// 		}
+
+// 		const otpDetails = {
+// 			email: existingUser.email,
+// 			subject: 'Password Reset OTP',
+// 			message: `Your OTP for password reset is ${existingUser.otp}`,
+// 		};
+// 	} catch (error) {
+// 		res.status(500).json({ error: error.message });
+// 	}
+
+// 	res.status(200).json({ message: 'Password reset email sent' });
+// };
+
 //***GENERATE REPORT***
 
 const generateReport = async (req, res) => {
@@ -339,4 +401,6 @@ export {
 	deleteUser,
 	searchUsers,
 	generateReport,
+	sendOTP,
+	verifyOTP,
 };
