@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const EmailConfirm: React.FC = () => {
 	const [otp, setOtp] = useState('');
+	const [email, setEmail] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Add your OTP verification logic here
 		if (otp.length !== 4) {
 			setErrorMessage('Please enter a valid 4-digit OTP.');
 			return;
 		}
-		// Handle OTP verification
-		console.log('OTP submitted:', otp);
+		if (!email) {
+			setErrorMessage('Email is required.');
+			return;
+		}
+
+		try {
+			setLoading(true); // Start loading
+			const response = await axios.post('http://localhost:4000/userApi/verify-otp', { email, otp });
+			setSuccessMessage(response.data.message);
+			setErrorMessage('');
+
+			// Wait a bit before redirecting
+			setTimeout(() => {
+				navigate('/login');
+			}, 1000);
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				setErrorMessage(error.response.data.error || 'An error occurred. Please try again.');
+			} else {
+				setErrorMessage('An unexpected error occurred.');
+			}
+			setSuccessMessage('');
+		} finally {
+			setLoading(false); // Stop loading
+		}
 	};
 
 	return (
@@ -29,6 +56,13 @@ const EmailConfirm: React.FC = () => {
 
 				<form onSubmit={handleSubmit} className='flex flex-col items-center'>
 					<input
+						type='email'
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						className='w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-purple-400 to-pink-500'
+						placeholder='Enter your email'
+					/>
+					<input
 						type='text'
 						value={otp}
 						onChange={(e) => setOtp(e.target.value)}
@@ -37,11 +71,13 @@ const EmailConfirm: React.FC = () => {
 						maxLength={4}
 					/>
 					{errorMessage && <p className='text-red-500 mb-4'>{errorMessage}</p>}
+					{successMessage && <p className='text-green-500 mb-4'>{successMessage}</p>}
 					<button
 						type='submit'
 						className='px-6 py-2 text-white font-bold bg-gradient-to-r from-purple-600 to-pink-500 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg'
+						disabled={loading} // Disable the button while loading
 					>
-						Verify OTP
+						{loading ? 'Verifying..' : 'Verify OTP'} {/* Change button text based on loading state */}
 					</button>
 				</form>
 

@@ -5,87 +5,97 @@ import PDFDocument from 'pdfkit';
 import axios from 'axios';
 import Otp from '../models/otpSchema.js';
 import sendEmail from '../utils/emailSender.js';
+import { hashOTP } from '../utils/helpers.js';
 
 //***AUTH***
+
 const createUser = async (req, res) => {
 	try {
 		const { username, password, email, isAdmin } = req.body;
 
-		const existingUser = await User.findOne({ username });
-
-		if (existingUser) {
-			return res.status(401).json({ error: 'Username already exists' });
-		}
-
+		// Check for required fields
 		if (!username || !password || !email) {
 			return res.status(400).json({ error: 'Username, email, and password are required' });
 		}
 
+		// Check if password meets length requirement
 		if (password.length < 6) {
 			return res.status(400).json({ error: 'Password must be at least 6 characters' });
 		}
 
+		// Check for existing username
+		const existingUser = await User.findOne({ username });
+		if (existingUser) {
+			return res.status(401).json({ error: 'Username already exists' });
+		}
+
+		// Check for existing email
+		const existingEmail = await User.findOne({ email });
+		if (existingEmail) {
+			return res.status(401).json({ error: 'Email already registered' });
+		}
+
+		// Hash the password
 		const hashedPassword = await hashPassword(password);
 
+		// Create a new user
 		const newUser = new User({
 			username,
 			email,
 			password: hashedPassword,
-			isAdmin: isAdmin || false, // Default to false if not provided
+			isAdmin: isAdmin || false,
 			isEmailVerified: false,
 		});
 
+		// Save the user
 		await newUser.save();
+
+		// Send the OTP
+		await sendUserOTP(email);
 
 		res.status(201).json({ message: 'User created successfully, please verify your email to login', user: newUser });
 	} catch (error) {
-		console.error(error);
+		console.error('Error creating user:', error);
 		res.status(500).json({ error: 'Internal server error' });
 	}
 };
 
-const sendOTP = async (req, res) => {
-	const { email, subject, message, duration = 1 } = req.body;
+// Function to send OTP
+const sendUserOTP = async (email) => {
 	try {
-		if (!email && !subject && !message) {
-			throw new Error('Email, subject, and message are required');
-		}
-
-		await Otp.deleteOne({ email });
-
 		const generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
 
 		const mailOptions = {
 			from: process.env.AUTH_EMAIL,
 			to: email,
-			subject: subject,
+			subject: 'Email Verification OTP',
 			html: `
-					<h1>${message}</h1>
-					<p style="font-size: 24px; font-weight: bold; color: red;">${generatedOTP}</p>
-					<p>This code will expire in ${duration} hour${duration > 1 ? 's' : ''}</p>
+				<h1>Email Verification</h1>
+				<p style="font-size: 24px; font-weight: bold; color: red;">${generatedOTP}</p>
+				<p>This code will expire in 1 hour</p>
 			`,
 		};
 
+		// Send the email
 		await sendEmail(mailOptions);
 
-		const hashedOTP = await hashPassword(generatedOTP);
+		const hashedOTP = await hashOTP(generatedOTP);
 		const newOTP = new Otp({
 			email,
 			otp: hashedOTP,
 			createdAt: Date.now(),
-			expiresAt: Date.now() + 3600000 * +duration,
+			expiresAt: Date.now() + 3600000, // 1 hour
 		});
 
-		const createdNewOTP = await newOTP.save();
-
-		res.status(200).json(createdNewOTP);
+		// Save the OTP
+		await newOTP.save();
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({ error: 'Internal server error' });
+		throw new Error('Failed to send OTP');
 	}
 };
 
-const verifyOTP = async (req, res) => {
+const verifyUserOTP = async (req, res) => {
 	const { email, otp } = req.body;
 
 	if (!email || !otp) {
@@ -128,14 +138,15 @@ const verifyOTP = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-	//this controller isn't necessary to log in user but it is used for double checking and logging
-	//passport-local already authenticated ths user even before this controller runs
-
 	const { username, password } = req.body;
 
 	const user = await User.findOne({ username });
 	if (!user) {
 		return res.status(401).json({ error: 'Invalid username or password' });
+	}
+
+	if (!user.isEmailVerified) {
+		return res.status(403).json({ error: 'Email not verified. Please verify your email before logging in.' });
 	}
 
 	const match = await comparePassword(password, user.password);
@@ -401,6 +412,5 @@ export {
 	deleteUser,
 	searchUsers,
 	generateReport,
-	sendOTP,
-	verifyOTP,
+	verifyUserOTP,
 };

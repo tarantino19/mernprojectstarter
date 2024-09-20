@@ -33,11 +33,11 @@ const LoginForm: React.FC = () => {
 			if (response.data.status === 'success') {
 				navigate('/');
 			} else {
-				setErrorMessage('Username or password does not match existing account');
+				setErrorMessage('Username or password does not match existing verified account');
 			}
 		} catch (error) {
 			console.error('Login error:', error);
-			setErrorMessage('Username or password does not match existing account');
+			setErrorMessage('Username or password does not match existing verified account');
 		} finally {
 			setLoading(false);
 		}

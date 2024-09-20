@@ -13,8 +13,7 @@ import {
 	deleteUser,
 	searchUsers,
 	generateReport,
-	sendOTP,
-	verifyOTP,
+	verifyUserOTP,
 } from '../controllers/userController.js';
 import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
@@ -25,9 +24,8 @@ import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
 //***GENERATE REPORT***
 userRouter.get('/users/generate-report', isAuthenticated, generateReport);
 
-//***OTP REQUEST***
-userRouter.post('/otp-request', sendOTP);
-userRouter.post('/verify-otp', verifyOTP);
+//***OTP-EMAIL USER VERIFICATION***
+userRouter.post('/verify-otp', verifyUserOTP);
 
 //auth routes
 userRouter.post('/signup', createUser);

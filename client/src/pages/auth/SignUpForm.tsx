@@ -38,7 +38,7 @@ const SignUpForm = () => {
 
 			// Redirect to login page on success
 			if (response.status === 201) {
-				navigate('/email-confirmation-message');
+				navigate('/email-confirmation');
 			}
 		} catch (error: any) {
 			if (axios.isAxiosError(error)) {
@@ -46,6 +46,10 @@ const SignUpForm = () => {
 					// Check if the error message from backend indicates username already exists
 					if (error.response.data.error === 'Username already exists') {
 						setError('username', { type: 'manual', message: 'Username already exists. Please choose another one.' });
+					}
+
+					if (error.response.data.error === 'Email already registered') {
+						setError('email', { type: 'manual', message: 'Email already exists. Please choose another one.' });
 					} else {
 						// Display other API error messages
 						setErrorMessage(error.response.data.message || 'An error occurred during signup');
