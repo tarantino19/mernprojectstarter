@@ -1,4 +1,5 @@
 import React from 'react';
+import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
@@ -8,10 +9,8 @@ import SignUpForm from './pages/auth/SignUpForm.tsx';
 import LoginForm from './pages/auth/LoginForm.tsx';
 import PrivateRoute from './pages/auth/PrivateRoute.tsx';
 import EmailConfirm from './pages/EmailConfirm.tsx';
-import './index.css';
 import ForgotPassword from './pages/auth/ForgotPassword.tsx';
 import ChangePassword from './pages/auth/ChangePassword.tsx';
-import ProtectedChangePassword from './pages/auth/ProtectedChangePassword.tsx';
 
 const queryClient = new QueryClient();
 
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/change-password',
-		element: <ProtectedChangePassword />,
+		element: <ChangePassword />,
 	},
 	{
 		path: '/forgot-password',

@@ -14,6 +14,8 @@ import {
 	searchUsers,
 	generateReport,
 	verifyUserOTP,
+	changePassword,
+	forgotPasswordRequest,
 } from '../controllers/userController.js';
 import '../strategies/local.strategy.js';
 import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
@@ -26,6 +28,10 @@ userRouter.get('/users/generate-report', isAuthenticated, generateReport);
 
 //***OTP-EMAIL USER VERIFICATION***
 userRouter.post('/verify-otp', verifyUserOTP);
+
+//***CHANGE PASSWORD***
+userRouter.post('/forgot-password', forgotPasswordRequest);
+userRouter.post('/change-password', changePassword);
 
 //auth routes
 userRouter.post('/signup', createUser);

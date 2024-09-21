@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface ForgotPasswordFormData {
 	email: string;
@@ -13,24 +14,24 @@ const ForgotPassword: React.FC = () => {
 		formState: { errors },
 	} = useForm<ForgotPasswordFormData>();
 	const [loading, setLoading] = useState(false);
-	const [message, setMessage] = useState<string | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	const onSubmit = async (data: ForgotPasswordFormData) => {
+		if (loading) return;
+
 		try {
 			setLoading(true);
-			setMessage(null);
 			setErrorMessage(null);
+			setSuccessMessage(null);
 
-			// Send the request to the backend
 			const response = await axios.post('http://localhost:4000/userApi/forgot-password', data);
-
-			if (response.status === 200) {
-				setMessage('If this email exists in our system, you will receive a password reset link.');
-			}
-		} catch (error) {
-			console.error('Error:', error);
-			setErrorMessage('Something went wrong. Please try again.');
+			console.log('response', response);
+			setSuccessMessage('Password reset link sent to your email');
+			navigate('/change-password');
+		} catch (error: any) {
+			setErrorMessage('You need a valid email or the email must be verified first');
 		} finally {
 			setLoading(false);
 		}
@@ -43,7 +44,7 @@ const ForgotPassword: React.FC = () => {
 					Forgot Password
 				</h1>
 
-				{message && <p className='text-green-500 text-center mb-4'>{message}</p>}
+				{successMessage && <p className='text-green-500 text-center mb-4'>{successMessage}</p>}
 				{errorMessage && <p className='text-red-500 text-center mb-4'>{errorMessage}</p>}
 
 				<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
@@ -65,7 +66,6 @@ const ForgotPassword: React.FC = () => {
 						/>
 						{errors.email && <p className='text-red-500 text-sm'>{errors.email.message}</p>}
 					</div>
-
 					<button
 						type='submit'
 						className={`w-full py-2 text-white font-bold rounded-lg transition-all ${
@@ -75,7 +75,7 @@ const ForgotPassword: React.FC = () => {
 						}`}
 						disabled={loading}
 					>
-						{loading ? 'Submitting...' : 'Send Reset Link'}
+						{loading ? 'Submitting...' : 'Reset Password'}
 					</button>
 				</form>
 			</div>
