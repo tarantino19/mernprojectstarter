@@ -1,6 +1,6 @@
 import React from 'react';
-import MainBody from './MainBody';
-import MainNav from './MainNav';
+import MainBody from '../components/MainBody';
+import MainNav from '../components/MainNav';
 
 const Products = () => {
 	return (

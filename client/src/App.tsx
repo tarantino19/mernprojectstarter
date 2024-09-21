@@ -13,6 +13,7 @@ import ForgotPassword from './pages/auth/ForgotPassword.tsx';
 import ChangePassword from './pages/auth/ChangePassword.tsx';
 import AboutPage from './pages/auth/AboutPage.tsx';
 import Products from './pages/Products.tsx';
+import GifGrid from './pages/GifGrid.tsx';
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
 			{
 				path: 'products',
 				element: <Products />,
+			},
+			{
+				path: 'rick',
+				element: <GifGrid />,
 			},
 		],
 	},

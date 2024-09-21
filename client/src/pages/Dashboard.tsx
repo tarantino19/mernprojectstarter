@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import MainNav from './MainNav';
-import MainBody from './MainBody';
+import MainNav from '../components/MainNav';
+import MainBody from '../components/MainBody';
 
 type User = {
 	profileId: string;

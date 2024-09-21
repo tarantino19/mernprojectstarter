@@ -1,6 +1,6 @@
 import React from 'react';
-import MainNav from '../MainNav';
-import MainBody from '../MainBody';
+import MainNav from '../../components/MainNav';
+import MainBody from '../../components/MainBody';
 
 const AboutPage = () => {
 	return (

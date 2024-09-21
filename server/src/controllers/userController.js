@@ -136,6 +136,7 @@ const sendUserOTPforPassword = async (email) => {
 	}
 };
 
+//Verify User OTP
 const verifyUserOTP = async (req, res) => {
 	const { email, otp } = req.body;
 
@@ -178,6 +179,7 @@ const verifyUserOTP = async (req, res) => {
 	}
 };
 
+//request OTP for password
 const forgotPasswordRequest = async (req, res) => {
 	const { email } = req.body;
 
@@ -252,6 +254,7 @@ const changePassword = async (req, res) => {
 	}
 };
 
+//authorization
 const loginUser = async (req, res) => {
 	const { username, password } = req.body;
 
