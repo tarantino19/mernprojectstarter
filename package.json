@@ -1,0 +1,12 @@
+{
+  "name": "project-template",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
