@@ -3,7 +3,6 @@ import axios from 'axios';
 import Loader from '../components/Loader';
 import MainNav from './MainNav';
 import MainBody from './MainBody';
-import { Link } from 'react-router-dom';
 
 type UserProfile = {
 	_id: string;

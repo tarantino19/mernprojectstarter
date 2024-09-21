@@ -8,9 +8,11 @@ import NotFoundPage from './pages/NotFoundPage.tsx';
 import SignUpForm from './pages/auth/SignUpForm.tsx';
 import LoginForm from './pages/auth/LoginForm.tsx';
 import PrivateRoute from './pages/auth/PrivateRoute.tsx';
-import EmailConfirm from './pages/EmailConfirm.tsx';
+import EmailConfirm from './pages/auth/EmailConfirm.tsx';
 import ForgotPassword from './pages/auth/ForgotPassword.tsx';
 import ChangePassword from './pages/auth/ChangePassword.tsx';
+import AboutPage from './pages/auth/AboutPage.tsx';
+import Products from './pages/Products.tsx';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
 			{
 				path: 'profile',
 				element: <ProfilePage />,
+			},
+			{
+				path: 'about-page',
+				element: <AboutPage />,
+			},
+			{
+				path: 'products',
+				element: <Products />,
 			},
 		],
 	},

@@ -22,12 +22,11 @@ const EmailConfirm: React.FC = () => {
 		}
 
 		try {
-			setLoading(true); // Start loading
+			setLoading(true);
 			const response = await axios.post('http://localhost:4000/userApi/verify-otp', { email, otp });
 			setSuccessMessage(response.data.message);
 			setErrorMessage('');
 
-			// Wait a bit before redirecting
 			setTimeout(() => {
 				navigate('/login');
 			}, 1000);
@@ -39,7 +38,7 @@ const EmailConfirm: React.FC = () => {
 			}
 			setSuccessMessage('');
 		} finally {
-			setLoading(false); // Stop loading
+			setLoading(false);
 		}
 	};
 
@@ -75,9 +74,9 @@ const EmailConfirm: React.FC = () => {
 					<button
 						type='submit'
 						className='px-6 py-2 text-white font-bold bg-gradient-to-r from-purple-600 to-pink-500 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg'
-						disabled={loading} // Disable the button while loading
+						disabled={loading}
 					>
-						{loading ? 'Verifying..' : 'Verify OTP'} {/* Change button text based on loading state */}
+						{loading ? 'Verifying..' : 'Verify OTP'}
 					</button>
 				</form>
 

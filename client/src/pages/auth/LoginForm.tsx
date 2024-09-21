@@ -44,9 +44,9 @@ const LoginForm: React.FC = () => {
 	};
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
+		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500'>
 			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
-				<h1 className='text-2xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500'>
+				<h1 className='text-2xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>
 					Welcome Back!
 				</h1>
 				{errorMessage && <p className='text-red-500 text-center mb-4'>{errorMessage}</p>} {/* Display error message */}
@@ -59,7 +59,7 @@ const LoginForm: React.FC = () => {
 							id='username'
 							type='text'
 							{...register('username', { required: 'Username is required' })}
-							className='w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
+							className='w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-green-400 to-blue-500'
 						/>
 						{errors.username && <p className='text-red-500 text-sm'>{errors.username.message}</p>}
 					</div>
@@ -72,17 +72,17 @@ const LoginForm: React.FC = () => {
 							id='password'
 							type='password'
 							{...register('password', { required: 'Password is required' })}
-							className='w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
+							className='w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-green-400 to-blue-500'
 						/>
 						{errors.password && <p className='text-red-500 text-sm'>{errors.password.message}</p>}
 					</div>
 
 					<button
 						type='submit'
-						className={`w-full py-2 text-white font-bold rounded-lg transition-all ${
+						className={`w-full py-2 text-white font-bold rounded transition-all ${
 							loading
 								? 'bg-gray-400 cursor-not-allowed'
-								: 'bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700'
+								: 'bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600'
 						}`}
 						disabled={loading}
 					>
@@ -92,7 +92,7 @@ const LoginForm: React.FC = () => {
 				<div className='text-center mt-4'>
 					<Link
 						to={'/forgot-password'}
-						className='text-sm font-semibold text-purple-600 hover:text-purple-800 transition-colors duration-200'
+						className='text-sm font-semibold text-gray-300 hover:text-gray-500 transition-colors duration-200'
 					>
 						Forgot Password?
 					</Link>

@@ -41,7 +41,6 @@ const ChangePassword: React.FC = () => {
 				navigate('/login');
 			}, 500);
 		} catch (error: any) {
-			// Handle different error responses
 			if (error.response && error.response.data) {
 				const backendError = error.response.data.error;
 				if (backendError === 'Invalid email') {
@@ -64,7 +63,7 @@ const ChangePassword: React.FC = () => {
 	};
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
+		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-green-500 to-blue-500'>
 			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
 				<div className='text-center'>Check your email for the OTP.</div>
 				<div className='text-center mb-4'>Hurry! it expires within 30 minutes!</div>

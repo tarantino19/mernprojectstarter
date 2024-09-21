@@ -38,9 +38,9 @@ const ForgotPassword: React.FC = () => {
 	};
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500'>
+		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-green-500 to-blue-500'>
 			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
-				<h1 className='text-2xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500'>
+				<h1 className='text-3xl font-extrabold text-center mb-6 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-yellow-500 to-green-400'>
 					Forgot Password
 				</h1>
 
@@ -62,16 +62,16 @@ const ForgotPassword: React.FC = () => {
 									message: 'Please enter a valid email address',
 								},
 							})}
-							className='w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
+							className='w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-red-400 via-yellow-500 to-green-400'
 						/>
 						{errors.email && <p className='text-red-500 text-sm'>{errors.email.message}</p>}
 					</div>
 					<button
 						type='submit'
-						className={`w-full py-2 text-white font-bold rounded-lg transition-all ${
+						className={`w-full py-3 text-white font-bold rounded-lg transition-all ${
 							loading
 								? 'bg-gray-400 cursor-not-allowed'
-								: 'bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700'
+								: 'bg-gradient-to-r from-red-400 via-yellow-500 to-green-400 hover:from-red-500 hover:via-yellow-600 hover:to-green-500'
 						}`}
 						disabled={loading}
 					>
