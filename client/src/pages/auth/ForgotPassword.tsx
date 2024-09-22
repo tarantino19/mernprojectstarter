@@ -41,7 +41,7 @@ const ForgotPassword: React.FC = () => {
 		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-500'>
 			<div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
 				<h1 className='text-3xl font-extrabold text-center mb-6 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>
-					Forgot Password
+					Password Reset
 				</h1>
 
 				{successMessage && <p className='text-green-500 text-center mb-4'>{successMessage}</p>}

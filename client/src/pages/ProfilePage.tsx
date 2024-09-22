@@ -65,6 +65,9 @@ const ProfilePage = () => {
 								<div>No user profile found.</div>
 							)}
 						</div>
+						<div className='text-gray-700'>
+							<Link to={'/forgot-password'}>Want to Change Password? Request Your OTP Here</Link>
+						</div>
 					</div>
 					<div className='p-4'>
 						{userProfile?.isAdmin ? (
