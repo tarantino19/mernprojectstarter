@@ -35,7 +35,6 @@ const ProfilePage = () => {
 	} = useQuery({
 		queryKey: ['userProfile'],
 		queryFn: fetchUserProfile,
-		staleTime: 24 * 60 * 60 * 1000,
 	});
 
 	if (isLoading) {

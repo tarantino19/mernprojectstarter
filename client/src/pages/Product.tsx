@@ -17,9 +17,12 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	};
 
 	return (
-		<div className='border-b border-gray-200 py-4 hover:cursor-pointer mt-1' onClick={handleClick}>
+		<div key={product.id} className='border-b border-gray-200 py-4 hover:cursor-pointer mt-1' onClick={handleClick}>
 			<h2 className='text-xl font-semibold text-gray-800'>{product.title}</h2>
 			<p className='text-gray-600'>{product.body}</p>
+			<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4'>
+				Find Out More...
+			</button>
 		</div>
 	);
 };
