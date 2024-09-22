@@ -197,8 +197,15 @@ const forgotPasswordRequest = async (req, res) => {
 			return res.status(400).json({ error: { message: 'Email not verified' } });
 		}
 
+		// Remove existing OTP if it exists (so the new OTP requested replaces the old one)
+		await Otp.deleteOne({ email });
+
 		// Send the OTP
-		await sendUserOTPforPassword(email);
+		try {
+			await sendUserOTPforPassword(email);
+		} catch (error) {
+			console.log('Error sending OTP:', error);
+		}
 
 		res.status(200).json({ message: 'OTP sent successfully' });
 	} catch (error) {

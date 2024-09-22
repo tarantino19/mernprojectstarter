@@ -43,9 +43,9 @@ const EmailConfirm: React.FC = () => {
 	};
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500'>
+		<div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500'>
 			<div className='bg-white p-8 rounded-lg shadow-lg max-w-md w-full'>
-				<h1 className='text-3xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500'>
+				<h1 className='text-3xl font-bold text-center mb-4 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-blue-500'>
 					Confirm Your Email
 				</h1>
 				<p className='text-gray-700 text-center mb-6'>
@@ -58,14 +58,14 @@ const EmailConfirm: React.FC = () => {
 						type='email'
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
-						className='w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-purple-400 to-pink-500'
+						className='w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-green-400 to-blue-500'
 						placeholder='Enter your email'
 					/>
 					<input
 						type='text'
 						value={otp}
 						onChange={(e) => setOtp(e.target.value)}
-						className='w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-purple-400 to-pink-500'
+						className='w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gradient-to-r from-green-400 to-blue-500'
 						placeholder='Enter your 4-digit OTP'
 						maxLength={4}
 					/>
@@ -73,7 +73,7 @@ const EmailConfirm: React.FC = () => {
 					{successMessage && <p className='text-green-500 mb-4'>{successMessage}</p>}
 					<button
 						type='submit'
-						className='px-6 py-2 text-white font-bold bg-gradient-to-r from-purple-600 to-pink-500 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg'
+						className='px-6 py-2 text-white font-bold bg-gradient-to-r from-green-600 to-blue-500 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg'
 						disabled={loading}
 					>
 						{loading ? 'Verifying..' : 'Verify OTP'}

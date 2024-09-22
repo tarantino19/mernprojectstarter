@@ -15,7 +15,7 @@ const SignUpForm = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		setError,
 	} = useForm<SignUpFormData>();
 	const navigate = useNavigate();
@@ -130,12 +130,14 @@ const SignUpForm = () => {
 
 					<button
 						type='submit'
-						disabled={loading}
+						disabled={isSubmitting || loading}
 						className={`w-full py-3 ${
-							loading ? 'bg-gray-400' : 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600'
+							isSubmitting
+								? 'bg-gray-400'
+								: 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600'
 						} text-white font-bold rounded-lg transition-all`}
 					>
-						{loading ? 'Submitting...' : 'Sign Up'}
+						{isSubmitting ? 'Submitting...' : 'Sign Up'}
 					</button>
 				</form>
 				<div className='pt-10 text-center'>
