@@ -6,6 +6,7 @@ import MainBody from '../components/MainBody';
 import { Link } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { useState } from 'react';
+import BigModal from '../components/BigModal';
 
 type UserProfile = {
 	_id: string;
@@ -38,7 +39,8 @@ const ProfilePage = () => {
 		queryKey: ['userProfile'],
 		queryFn: fetchUserProfile,
 	});
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isSmallModalOpen, setIsSmallModalOpen] = useState(false);
+	const [isBigModalOpen, setIsBigModalOpen] = useState(false);
 
 	if (isLoading) {
 		return <Loader />;
@@ -97,21 +99,30 @@ const ProfilePage = () => {
 					</div>
 					<div className='p-4'>
 						<button
-							onClick={() => setIsModalOpen(true)}
+							onClick={() => setIsSmallModalOpen(true)}
 							className='bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out hover:opacity-80 hover:scale-105'
 						>
-							Open Modal
+							Open Small Modal
 						</button>
-						<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title='Example Modal'>
+						<Modal isOpen={isSmallModalOpen} onClose={() => setIsSmallModalOpen(false)} title='Order Status'>
 							<p>This is the content of the modal. You can put anything here!</p>
 						</Modal>
+						<button
+							onClick={() => setIsBigModalOpen(true)}
+							className='ml-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out hover:opacity-80 hover:scale-105'
+						>
+							Open Big Modal
+						</button>
+						<BigModal isOpen={isBigModalOpen} onClose={() => setIsBigModalOpen(false)} title='Hello World'>
+							<p>This is the content of the modal. You can put anything here!</p>
+						</BigModal>
 					</div>
 				</MainBody>
 			</>
 		);
 	}
 
-	return null; // In case the status is not 'success', return null or handle other statuses as needed
+	return null;
 };
 
 export default ProfilePage;
