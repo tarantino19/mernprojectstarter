@@ -4,6 +4,8 @@ import Loader from '../components/Loader';
 import MainNav from '../components/MainNav';
 import MainBody from '../components/MainBody';
 import { Link } from 'react-router-dom';
+import Modal from '../components/Modal';
+import { useState } from 'react';
 
 type UserProfile = {
 	_id: string;
@@ -36,6 +38,7 @@ const ProfilePage = () => {
 		queryKey: ['userProfile'],
 		queryFn: fetchUserProfile,
 	});
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	if (isLoading) {
 		return <Loader />;
@@ -53,7 +56,6 @@ const ProfilePage = () => {
 					<h1 className='text-3xl font-bold text-gray-900 mb-4'>Hello, {userProfile?.username}</h1>
 					<div className='bg-white shadow rounded-lg p-6'>
 						<div className='text-gray-700'>
-							{' '}
 							{userProfile ? (
 								<div>
 									<h2>{userProfile.username}</h2>
@@ -83,7 +85,7 @@ const ProfilePage = () => {
 							</div>
 						) : (
 							<div className='bg-gray-100 p-4 rounded-lg shadow-md'>
-								<p className='font-bold mb-2 text-gray-800'>You are an not an admin but I still love you for being a member.</p>
+								<p className='font-bold mb-2 text-gray-800'>You are not an admin, but I still love you for being a member.</p>
 								<Link
 									to='/rick'
 									className='inline-block px-6 py-2 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-bold rounded-lg shadow-lg hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all'
@@ -93,10 +95,23 @@ const ProfilePage = () => {
 							</div>
 						)}
 					</div>
+					<div className='p-4'>
+						<button
+							onClick={() => setIsModalOpen(true)}
+							className='bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out hover:opacity-80 hover:scale-105'
+						>
+							Open Modal
+						</button>
+						<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title='Example Modal'>
+							<p>This is the content of the modal. You can put anything here!</p>
+						</Modal>
+					</div>
 				</MainBody>
 			</>
 		);
 	}
+
+	return null; // In case the status is not 'success', return null or handle other statuses as needed
 };
 
 export default ProfilePage;
