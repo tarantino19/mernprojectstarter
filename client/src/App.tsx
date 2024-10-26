@@ -15,6 +15,8 @@ import AboutPage from './pages/auth/AboutPage.tsx';
 import Products from './pages/Products.tsx';
 import GifGrid from './pages/GifGrid.tsx';
 import ProductDetails from './pages/ProductDetails.tsx';
+import Store from './pages/Store.tsx';
+import CartItems from './pages/CartItems.tsx';
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
 			{
 				path: 'products/:productId',
 				element: <ProductDetails />,
+			},
+			{
+				path: 'store',
+				element: <Store />,
+			},
+			{
+				path: 'cart-items',
+				element: <CartItems />,
 			},
 			{
 				path: 'rick',
