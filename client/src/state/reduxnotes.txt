@@ -1,0 +1,19 @@
+***Store - holds the state of the application
+
+Slices - pieces of state related to a specific part of the application
+
+***Action - Tell redux what it should do with the state - like a set of instruction
+- > has a TYPE and a PAYLOAD
+funct -> Type: "INCREMENT BH AMOUNT X", Payload: Any data i want to send to redux so it can perform its job
+
+***Reducers - functions that are listeners to dispatch the action.
+They determine the new state depending on the action type. They respond to dispatch actions.
+
+1 - Create a folder called state
+2 - Create new file , store.ts
+3 - Import RTK
+
+
+
+
+
