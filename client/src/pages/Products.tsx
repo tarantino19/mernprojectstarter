@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MainBody from '../components/MainBody';
 import MainNav from '../components/MainNav';
 import { useQuery } from '@tanstack/react-query';
@@ -20,8 +21,10 @@ const fetchProducts = async (): Promise<Products[]> => {
 };
 
 const Products = () => {
-	const [searchTerm, setSearchTerm] = useState('');
-	const [selectedUserId, setSelectedUserId] = useState(''); // State for the dropdown selected userId
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const searchTerm = searchParams.get('searchTerm') || '';
+	const selectedUserId = searchParams.get('selectedUserId') || '';
 
 	const {
 		data: products,
@@ -59,13 +62,16 @@ const Products = () => {
 				<h1 className='text-3xl font-bold text-gray-900 mb-4'>Products</h1>
 
 				{/* Search by Title/Body */}
-				<SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+				<SearchBar
+					searchTerm={searchTerm}
+					setSearchParams={(term) => setSearchParams({ searchTerm: term, selectedUserId })}
+				/>
 
 				{/* Dropdown for filtering by userId */}
 				<div className='my-4'>
 					<select
 						value={selectedUserId}
-						onChange={(e) => setSelectedUserId(e.target.value)}
+						onChange={(e) => setSearchParams({ searchTerm, selectedUserId: e.target.value })}
 						className='w-full p-2 border border-gray-300 rounded'
 					>
 						<option value=''>All Products</option>

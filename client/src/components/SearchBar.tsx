@@ -2,10 +2,10 @@ import React from 'react';
 
 type SearchBarProps = {
 	searchTerm: string;
-	setSearchTerm: (value: string) => void;
+	setSearchParams: (value: string) => void;
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchParams }) => {
 	return (
 		<div className='mb-6'>
 			<input
@@ -13,7 +13,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
 				placeholder='Search products...'
 				className='w-full p-2 border border-gray-300 rounded'
 				value={searchTerm}
-				onChange={(e) => setSearchTerm(e.target.value)}
+				onChange={(e) => setSearchParams(e.target.value)}
 			/>
 		</div>
 	);
