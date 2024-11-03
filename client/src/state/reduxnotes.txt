@@ -15,5 +15,143 @@ They determine the new state depending on the action type. They respond to dispa
 
 
 
+HOW TO RTK FOR CALLING APIs
+
+Step 1: Set Up the API Slice
+
+// store/apiSlice.js
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+export const apiSlice = createApi({
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com/' }), // Adjust the base URL to your backend
+  endpoints: (builder) => ({
+    // GET request to fetch all products
+    getProducts: builder.query({
+      query: () => 'posts', // API endpoint for fetching products
+    }),
+    
+    // GET request to fetch a single product by ID
+    getProductById: builder.query({
+      query: (id) => `posts/${id}`, // Fetch a single product by ID
+    }),
+    
+    // POST request to create a new product
+    createProduct: builder.mutation({
+      query: (newProduct) => ({
+        url: 'posts', // API endpoint for creating a new product
+        method: 'POST',
+        body: newProduct, // Pass new product data in the request body
+      }),
+    }),
+    
+    // PUT request to update an existing product
+    updateProduct: builder.mutation({
+      query: ({ id, ...updatedProduct }) => ({
+        url: `posts/${id}`, // API endpoint for updating a product by ID
+        method: 'PUT',
+        body: updatedProduct, // Pass updated product data in the request body
+      }),
+    }),
+  }),
+});
+
+// Export hooks for use in components
+export const {
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} = apiSlice;
+
+
+
+Using the New Mutations in a Component
+
+
+import React, { useState } from 'react';
+import { useGetProductsQuery, useCreateProductMutation, useUpdateProductMutation } from '../store/apiSlice';
+
+const ProductsComponent = () => {
+  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const [createProduct] = useCreateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  
+  const [newProduct, setNewProduct] = useState({ title: '', body: '' });
+  const [updatedProduct, setUpdatedProduct] = useState({ id: '', title: '', body: '' });
+
+  const handleCreateProduct = async () => {
+    await createProduct(newProduct).unwrap();
+    setNewProduct({ title: '', body: '' }); // Clear input fields after creation
+  };
+
+  const handleUpdateProduct = async () => {
+    await updateProduct(updatedProduct).unwrap();
+    setUpdatedProduct({ id: '', title: '', body: '' }); // Clear input fields after update
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error fetching products.</p>;
+
+  return (
+    <div>
+      <h1>Products</h1>
+      
+      <div>
+        <h2>Create New Product</h2>
+        <input
+          type="text"
+          placeholder="Title"
+          value={newProduct.title}
+          onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Body"
+          value={newProduct.body}
+          onChange={(e) => setNewProduct({ ...newProduct, body: e.target.value })}
+        />
+        <button onClick={handleCreateProduct}>Create Product</button>
+      </div>
+
+      <div>
+        <h2>Update Product</h2>
+        <input
+          type="text"
+          placeholder="Product ID"
+          value={updatedProduct.id}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, id: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Title"
+          value={updatedProduct.title}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, title: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Body"
+          value={updatedProduct.body}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, body: e.target.value })}
+        />
+        <button onClick={handleUpdateProduct}>Update Product</button>
+      </div>
+
+      <div>
+        <h2>Product List</h2>
+        {products && products.map((product) => (
+          <div key={product.id}>
+            <h3>{product.title}</h3>
+            <p>{product.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductsComponent;
+
+
 
 
