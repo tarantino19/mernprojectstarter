@@ -18,3 +18,5 @@ const ModalContent: React.FC = () => {
 		</div>
 	);
 };
+
+export default ModalContent;
