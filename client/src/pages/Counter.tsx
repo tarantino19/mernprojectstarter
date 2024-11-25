@@ -12,7 +12,10 @@ const Counter: React.FC = () => {
 		increment: () => dispatch(increment()),
 		decrement: () => dispatch(decrement()),
 		reset: () => dispatch(reset()),
-		incrementByAmount: () => dispatch(incrementByAmount()),
+		incrementByAmount: () => {
+			dispatch(incrementByAmount());
+			dispatch(setAmount('')); // Reset input field
+		},
 		setAmount: (value: number | '') => dispatch(setAmount(value)),
 	};
 
