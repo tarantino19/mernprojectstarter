@@ -46,14 +46,6 @@ const router = createBrowserRouter([
 				element: <ProductDetails />,
 			},
 			{
-				path: 'store',
-				element: <Store />,
-			},
-			{
-				path: 'cart-items',
-				element: <CartItems />,
-			},
-			{
 				path: 'rick',
 				element: <GifGrid />,
 			},
@@ -61,7 +53,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/signup',
-		element: <SignUpForm />, // Public route
+		element: <SignUpForm />,
 	},
 	{
 		path: '/email-confirmation',
@@ -80,7 +72,7 @@ const router = createBrowserRouter([
 		element: <LoginForm />,
 	},
 	{
-		path: '*', // Fallback route
+		path: '*',
 		element: <NotFoundPage />,
 	},
 ]);

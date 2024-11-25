@@ -69,25 +69,9 @@ const MainNav = () => {
 									Products
 								</Link>
 							</li>
-							<li>
-								<Link
-									to='/store'
-									className='text-white font-bold text-lg px-4 py-2 rounded-full transition-all duration-300 ease-in-out hover:bg-opacity-70 hover:scale-105'
-								>
-									Fake Store
-								</Link>
-							</li>
 						</ul>
 					</nav>
 					<div className='flex space-x-4'>
-						<Link
-							to='/cart-items'
-							className='text-white font-bold text-lg px-4 py-2 border border-white rounded-full transition-all duration-300 ease-in-out hover:bg-opacity-50 hover:scale-105'
-						>
-							Cart Items
-							{/* Display total items count in red */}
-							{totalItemsInCart > 0 && <span className='ml-2 text-red-500 font-bold'>({totalItemsInCart})</span>}
-						</Link>
 						<Link
 							to='/profile'
 							className='text-white font-bold text-lg px-4 py-2 border border-white rounded-full transition-all duration-300 ease-in-out hover:bg-opacity-50 hover:scale-105'
